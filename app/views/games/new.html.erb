@@ -1,0 +1,19 @@
+<%= form_for :game, url: games_path do |f| %>
+  <div class="form-group">
+    <%= f.label :date %>
+    <%= f.date_field :date, class: 'form-control', data: { provide: 'datepicker' } %>
+  </div>
+  <div class="form-group">
+    <%= label :opponent, :id, "Opponent"%>
+    <%= collection_select :opponent, :id, @users, :id, :email, {  prompt: 'Select an opponent...' }, class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <%= label :player, :score, "Your score" %>
+    <%= number_field :player, :score, class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <%= label :opponent, :score, "Their score" %>
+    <%= number_field :opponent, :score, class: 'form-control' %>
+  </div>
+  <%= f.submit 'Save', class: 'btn btn-primary' %>
+<% end %>
