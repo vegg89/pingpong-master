@@ -20,7 +20,7 @@ class GamesController < ApplicationController
 
   private
     def game_params
-      params.require(:game).permit(:date)
+      params.require(:game).permit(:game_date)
     end
 
     def opponent_params
