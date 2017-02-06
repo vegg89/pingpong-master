@@ -3,5 +3,6 @@ class User < ActiveRecord::Base
   has_many :players
   has_many :games, through: :players
 
+  default_scope { order( rating: :desc ) }
   scope :all_except_me, -> (current_user) { where("NOT id = ?", current_user.id) }
 end
