@@ -22,5 +22,4 @@ test:
 
 production:
   <<: *default
-  adapter: postgresql
-  database: pingpong
+  database: db/production.sqlite3
