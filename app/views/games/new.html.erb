@@ -1,19 +1,25 @@
-<%= form_for :game, url: games_path do |f| %>
+<%= render 'error_messages' %>
+<%= form_for @game do |game_form| %>
   <div class="form-group">
-    <%= f.label :date %>
-    <%= f.date_field :game_date, class: 'form-control', data: { provide: 'datepicker' } %>
+    <%= game_form.label :game_date, "Date" %>
+    <%= game_form.date_field :game_date, class: 'form-control', data: { provide: 'datepicker' } %>
   </div>
-  <div class="form-group">
-    <%= label :opponent, :id, "Opponent"%>
-    <%= collection_select :opponent, :id, @users, :id, :email, {  prompt: 'Select an opponent...' }, class: 'form-control' %>
-  </div>
-  <div class="form-group">
-    <%= label :player, :score, "Your score" %>
-    <%= number_field :player, :score, class: 'form-control' %>
-  </div>
-  <div class="form-group">
-    <%= label :opponent, :score, "Their score" %>
-    <%= number_field :opponent, :score, class: 'form-control' %>
-  </div>
-  <%= f.submit 'Save', class: 'btn btn-primary' %>
+  <%= game_form.fields_for :players, @opponent do |opponent_fields| %>
+    <div class="form-group">
+      <%= opponent_fields.label :user_id, "Opponent"%>
+      <%= opponent_fields.collection_select :user_id, get_opponents(@current_user), :id, :email, {  prompt: 'Select an opponent...' }, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= opponent_fields.label :score, "Their score" %>
+      <%= opponent_fields.number_field :score, class: 'form-control' %>
+    </div>
+  <% end %>
+  <%= game_form.fields_for :players, @player do |player_fields| %>
+    <%= player_fields.hidden_field :user_id %>
+    <div class="form-group">
+      <%= player_fields.label :score, "Your score" %>
+      <%= player_fields.number_field :score, class: 'form-control' %>
+    </div>
+  <% end %>
+  <%= game_form.submit 'Save', class: 'btn btn-primary' %>
 <% end %>

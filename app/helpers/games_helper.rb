@@ -18,4 +18,8 @@ module GamesHelper
       "L"
     end
   end
+
+  def get_opponents(current_user)
+    User.all_except_me(current_user)
+  end
 end

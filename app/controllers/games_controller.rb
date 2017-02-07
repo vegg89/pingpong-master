@@ -6,38 +6,35 @@ class GamesController < ApplicationController
   end
 
   def new
-    @users = User.all_except_me(current_user)
+    @game = Game.new
+    @opponent = @game.players.build
+    @player = @game.players.build(user_id: current_user.id)
   end
 
   def create
-    @game = Game.create!(game_params)
-    @opponent = User.find(params["opponent"]["id"])
-    @opponent.players.create!(game: @game, score: opponent_params[:score])
-    current_user.players.create!(game: @game, score: player_params[:score])
-    update_ratings
-    redirect_to root_url
+    @game = Game.new(game_params)
+    @player = @game.players.select { |player| player.user_id == current_user.id }.first
+    @opponent = @game.players.reject { |player| player.user_id == current_user.id}.first
+    if @game.save
+      update_ratings
+      redirect_to root_url
+    else
+      render 'new'
+    end
   end
 
   private
     def game_params
-      params.require(:game).permit(:game_date)
-    end
-
-    def opponent_params
-      params.require(:opponent).permit(:score)
-    end
-
-    def player_params
-      params.require(:player).permit(:score)
+      params.require(:game).permit(:game_date, players_attributes: [:user_id, :score])
     end
 
     def update_ratings
-      p1_res = current_user.players.where(game: @game).first
-      p2_res = @opponent.players.where(game: @game).first
-      res = calculate_result(p1_res, p2_res)
-      Match.new(current_user, @opponent, res)
-      current_user.save!
-      @opponent.save!
+      p1 = @player.user
+      p2 = @opponent.user
+      res = calculate_result(@player, @opponent)
+      Match.new(p1, p2, res)
+      p1.save!
+      p2.save!
     end
 
     def calculate_result(p1, p2)
