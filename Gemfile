@@ -10,9 +10,14 @@ gem 'turbolinks',   '~> 2.5.3'
 
 gem 'devise',       '~> 3.5.2'
 gem 'devise-bootstrap-views', '~> 0.0.6'
+gem 'bootstrap-datepicker-rails'
 
 group :development, :test do
   gem 'byebug'
   gem 'web-console', '~> 2.0'
   gem 'spring'
+end
+
+group :production do
+  gem 'pg'
 end

@@ -1,0 +1,8 @@
+<% opponent = get_opponent(game, @current_user.id) %>
+<% current_player = get_current_player(game, @current_user.id) %>
+<tr>
+  <th scope="row"><%= game.game_date %></th>
+  <td><%= opponent.user.email %></td>
+  <td><%= "#{current_player.score} - #{opponent.score}" %></td>
+  <td><%= game_status(current_player.score, opponent.score) %></td>
+</tr>
